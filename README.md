@@ -1,7 +1,7 @@
 # qqbot-ClockInAddon
 Python实现的基于napcat的qq机器人 打卡签到插件（整活版）
 ### 使用方法
-首先配置napcat（官网链接：https://napneko.github.io/guide/napcat）
+首先配置napcat（官网链接：https://napneko.github.io/guide/napcat ）
 
 在网络配置种添加一个HTTP服务器并启用
 ![alt text](doc/image-1.png)
@@ -15,3 +15,5 @@ token为`isuncy`
 python main.py
 ``` 
 即可使用
+效果图：
+![alt text](doc/image-2.png)
