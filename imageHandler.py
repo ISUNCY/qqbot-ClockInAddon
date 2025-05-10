@@ -65,7 +65,7 @@ class ImageHandler:
                 self.image.paste(luImage, ((day%6)*self.LUIMGWIDTH, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2), luImage)
             else :
                 self.image.paste(okLuImage, ((day%6)*self.LUIMGWIDTH, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2), okLuImage)       
-                if count != 1 :
+                if count[0] != 1 :
                     formalFont = ImageFont.truetype("font/STHUPO.TTF", int(self.NUMSIZE*0.8))
                     draw.text(((day%6)*self.LUIMGWIDTH+self.TITLESIZE+self.NUMSIZE//2, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2+self.TITLESIZE+self.NUMSIZE//2), str(count[0]), font=formalFont, fill=(255, 0, 0, 255))
             formalFont = ImageFont.truetype("font/STCAIYUN.TTF", self.NUMSIZE)

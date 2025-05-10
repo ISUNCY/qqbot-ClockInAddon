@@ -5,40 +5,39 @@ from messageSender import MessageSender
 from messageGetter import MessageGetter
 from dataHandler import DataHandler
 import datetime
+import json
 
-# messageListener = MessageListener()
-# messageListener.setUserId("1907435186")
+#加载配置文件
+def loadSettings():
+    userList,groupList,userListeners,groupListeners = [],[],[],[]
+    settingFileName = "settings.json"
+    with open(settingFileName, 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        userList = data.get("userList")
+        groupList = data.get("groupList")
 
-# while True:
-#     messageListener.checkUserMessage()
-#     newMessageList = messageListener.handelUserMessage();
-#     for message in newMessageList:
-#         if (message.get("message") == "🦌"):
-#             userId = message.get("user_id")
-#             messageId = message.get("message_id")
-#             dateTime = datetime.datetime.fromtimestamp(message.get("time"))
-#             imageHandler = ImageHandler(str(userId)+str(message.get("time"))+".png")
-#             userName = message.get("user_name")
-#             imageHandler.month = dateTime.month
-#             imageHandler.userId = userId    
-#             imageHandler.userName = userName        
-#             DataHandler.addRecord(userId, userName, dateTime.month, dateTime.day)
-#             messageGetter = MessageGetter()
-#             messageGetter.setMessageReplay(message.get("message_id"))
-#             messageGetter.addTextMessage("成功🦌了")
-#             messageGetter.addImageMessage(imageHandler.getImage())
-#             MessageSender.send_private_message(message.get("user_id"), messageGetter.getMessage())
+    for userId in userList:
+        userListener = MessageListener()
+        userListener.setUserId(userId=userId)
+        userListeners.append(userListener)
 
-#     time.sleep(3)
+    for groupId in groupList:
+        groupListener = MessageListener()
+        groupListener.setGroupId(groupId=groupId)
+        groupListeners.append(groupListener)
 
-messageListener = MessageListener()
-messageListener.setGroupId("850723286")
+    return userListeners,groupListeners
 
-while True:
+#检查消息是否触发
+def checkMessage(message):
+    return message == "🦌" or message == "鹿"
+
+#处理群组消息
+def handleGroupMessage(messageListener):
     messageListener.checkGroupMessage()
     newMessageList = messageListener.handelGroupMessage();
     for message in newMessageList:
-        if message.get("message") == "🦌" or message.get("message") == "鹿":
+        if checkMessage(message.get("message")):
             userId = message.get("user_id")
             messageId = message.get("message_id")
             dateTime = datetime.datetime.fromtimestamp(message.get("time"))
@@ -52,6 +51,35 @@ while True:
             messageGetter.setMessageReplay(message.get("message_id"))
             messageGetter.addTextMessage("成功🦌了")
             messageGetter.addImageMessage(imageHandler.getImage())
-            MessageSender.send_group_msg("850723286", messageGetter.getMessage())
+            MessageSender.send_group_msg(messageListener.groupId, messageGetter.getMessage())
 
-    time.sleep(3)
+#处理个人消息
+def hadlePrivateMessage(messageListener):
+    messageListener.checkUserMessage()
+    newMessageList = messageListener.handelUserMessage();
+    for message in newMessageList:
+        if (checkMessage(message.get("message"))):
+            userId = message.get("user_id")
+            messageId = message.get("message_id")
+            dateTime = datetime.datetime.fromtimestamp(message.get("time"))
+            imageHandler = ImageHandler(str(userId)+str(message.get("time"))+".png")
+            userName = message.get("user_name")
+            imageHandler.month = dateTime.month
+            imageHandler.userId = userId    
+            imageHandler.userName = userName        
+            DataHandler.addRecord(userId, userName, dateTime.month, dateTime.day)
+            messageGetter = MessageGetter()
+            messageGetter.setMessageReplay(message.get("message_id"))
+            messageGetter.addTextMessage("成功🦌了")
+            messageGetter.addImageMessage(imageHandler.getImage())
+            MessageSender.send_private_message(message.get("user_id"), messageGetter.getMessage())
+
+if __name__ == "__main__":
+
+    userListeners,groupListeners = loadSettings()
+    while True:
+        for messageListener in groupListeners:
+            handleGroupMessage(messageListener)
+        for messageListener in userListeners:
+            hadlePrivateMessage(messageListener)
+        time.sleep(2)
