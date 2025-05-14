@@ -34,19 +34,47 @@ class ImageHandler:
         return newImage
     
     @staticmethod
-    def getLuOkImage():
-        okImage = Image.open("img/yes.png")
-        luImage = Image.open("img/lu.png")
-        luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
-        okImage = ImageHandler.resizeOkImage(okImage)
-        okLuImage = Image.alpha_composite(luImage, okImage)
-        return okLuImage
+    def resizeImage(image):
+        width = ImageHandler.LUIMGWIDTH
+        height = ImageHandler.LUIMGHEIGHT
+        image = image.resize((width, height))
+        image = image.convert("RGBA")
+        newImage = Image.new('RGBA', (int(width*1.05), int(height*1.05)), (255, 255, 255, 0))
+        newImage.paste(image, (int(width*0.025), int(width*0.025)))
+        newImage = newImage.resize((width, height))
+        return newImage
     
+    # @staticmethod
+    # def getLuOkImage():
+    #     okImage = Image.open("img/yes.png")
+    #     luImage = Image.open("img/lu.png")
+    #     luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
+    #     okImage = ImageHandler.resizeOkImage(okImage)
+    #     okLuImage = Image.alpha_composite(luImage, okImage)
+    #     return okLuImage
+
+    
+    # @staticmethod
+    # def getLuImage():
+    #     luImage = Image.open("img/lu.png")
+    #     luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
+    #     return luImage
+
+    @staticmethod
+    def getLuOkImage():
+        luImage = Image.open("img/lu2.jpg")
+        luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
+        luImage = luImage.convert("RGBA")
+        luImage = ImageHandler.resizeImage(luImage)
+        return luImage
+
     @staticmethod
     def getLuImage():
-        luImage = Image.open("img/lu.png")
-        luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
-        return luImage
+        commonImage = Image.open("img/lu1.jpg")
+        commonImage = commonImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
+        commonImage = commonImage.convert("RGBA")
+        commonImage = ImageHandler.resizeImage(commonImage)
+        return commonImage
     
 
     def getImage(self):
@@ -54,7 +82,7 @@ class ImageHandler:
         draw = ImageDraw.Draw(self.image)
         formalFont = ImageFont.truetype("font/STXINGKA.TTF", self.TITLESIZE)
         titleText = str(self.month)+"月份 " + self.userName + " 打卡记录"
-        draw.text((self.TITLESIZE/2, self.TITLESIZE/2), titleText, font=formalFont, fill=(0, 0, 0, 255))
+        draw.text((self.TITLESIZE/2, self.TITLESIZE/2), titleText, font=formalFont, fill=(255, 255, 255, 255))
         okLuImage = ImageHandler.getLuOkImage()
         
         luImage = ImageHandler.getLuImage()
@@ -67,11 +95,15 @@ class ImageHandler:
                 self.image.paste(okLuImage, ((day%6)*self.LUIMGWIDTH, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2), okLuImage)       
                 if count[0] != 1 :
                     formalFont = ImageFont.truetype("font/STHUPO.TTF", int(self.NUMSIZE*0.8))
-                    draw.text(((day%6)*self.LUIMGWIDTH+self.TITLESIZE+self.NUMSIZE//2, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2+self.TITLESIZE+self.NUMSIZE//2), str(count[0]), font=formalFont, fill=(255, 0, 0, 255))
+                    draw.text(((day%6)*self.LUIMGWIDTH+self.TITLESIZE+self.NUMSIZE//3, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2+self.TITLESIZE+self.NUMSIZE//2), str(count[0]), font=formalFont, fill=(255, 0, 0, 255))
             formalFont = ImageFont.truetype("font/STCAIYUN.TTF", self.NUMSIZE)
-            draw.text(((day%6)*self.LUIMGWIDTH, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2), str(day), font=formalFont, fill=(0, 0, 0, 255))
+            draw.text(((day%6)*self.LUIMGWIDTH, (day//6)*self.LUIMGHEIGHT + self.TITLESIZE*2), str(day), font=formalFont, fill=(255, 255, 255, 255))
 
-        background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (249,245,215, 255))
+        # background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (249,245,215, 255))
+        # background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (70,170,255, 255))
+        # background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (60,140,210, 255))
+        # background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (50,120,180, 255))
+        background = Image.new('RGBA', (self.IMGWIDTH, self.IMGHEIGHT), (145,135,175, 255))
         self.image = Image.alpha_composite(background, self.image)
         buffer = BytesIO()
         self.image.save(buffer, format="PNG")

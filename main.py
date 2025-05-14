@@ -77,9 +77,17 @@ def hadlePrivateMessage(messageListener):
 if __name__ == "__main__":
 
     userListeners,groupListeners = loadSettings()
+        
     while True:
-        for messageListener in groupListeners:
-            handleGroupMessage(messageListener)
-        for messageListener in userListeners:
-            hadlePrivateMessage(messageListener)
-        time.sleep(2)
+        try :
+                
+            if userListeners != []:
+                for messageListener in groupListeners:
+                    handleGroupMessage(messageListener)
+            if groupListeners != []:
+                for messageListener in userListeners:
+                    hadlePrivateMessage(messageListener)
+            time.sleep(2)
+        except Exception as e:
+            print("Error: ", e)
+            time.sleep(2)
