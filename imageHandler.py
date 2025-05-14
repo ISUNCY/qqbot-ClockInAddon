@@ -62,9 +62,12 @@ class ImageHandler:
 
     @staticmethod
     def getLuOkImage():
+        okImage = Image.open("img/yes.png")
         luImage = Image.open("img/lu2.jpg")
         luImage = luImage.resize((ImageHandler.LUIMGWIDTH, ImageHandler.LUIMGHEIGHT))
         luImage = luImage.convert("RGBA")
+        okImage = ImageHandler.resizeOkImage(okImage)
+        luImage = Image.alpha_composite(luImage, okImage)
         luImage = ImageHandler.resizeImage(luImage)
         return luImage
 
