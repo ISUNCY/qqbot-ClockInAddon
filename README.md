@@ -20,5 +20,7 @@ python main.py
 
 即可使用。
 
+可修改`main.py`与`imageHandler.py`来更改关键词和图片
+
 效果图：
-![alt text](doc/image-2.png)
+![效果图](/doc/f8929c716bbac4bb316159d653410bf.jpg)
